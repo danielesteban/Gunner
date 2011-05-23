@@ -1,0 +1,46 @@
+/* reset */
+html, body, div, a, canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+	overflow: hidden;
+}
+:focus {
+	outline: 0;
+}
+html, body {
+	background: #000;
+}
+body {
+	color: #fff;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+/* main styles */
+#loading {
+	position: absolute;
+	margin: 0 auto;
+	width: 132px;
+	height: 18px;
+	top: 50%;
+	left: 50%;
+	margin: -9px 0 0 -66px;
+}
+
+#main, #main a {
+	display: none;
+}
+
+#main a {
+	float: left;
+	position: relative;
+	cursor: pointer;
+}
