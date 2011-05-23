@@ -658,6 +658,11 @@ PLAYER = {
 /* scene related funcs */
 
 SCENE = {
+	/* guys definitions */
+	guys : {
+		guy : { w: 35, h: 94, ws: 1, we: 1, j: 1, g: 0.4 },
+		dani : { w: 35, h: 94, ws: 2, we: 5, j: 1, g: 0.2 }
+	},
 	mainPlayer : null,
 	floors : null,
 	players : null,
@@ -688,7 +693,7 @@ SCENE = {
 		scene.enemies.push(scene.mainPlayer);
 		for(i in scene.enemies) {
 			o = scene.enemies[i];
-			g = SCENES.guys[o.g];
+			g = SCENE.guys[o.g];
 			mp = (o === scene.mainPlayer)
 			players.push(PLAYER.add((mp ? 'mainPlayer' : 'enemy' + i), o.x, o.y, g.w, g.h, o.g, g.ws, g.we, g.j, g.g, (mp ? previousAmmo || o.a : -1), (mp ? previousLife || o.l : o.l)));
 		}
@@ -931,11 +936,6 @@ EDITOR = {
 /* scenes definition */
 
 SCENES = {
-	/* guys definitions */
-	guys : {
-		guy : { w: 35, h: 94, ws: 1, we: 1, j: 1, g: 0.4 },
-		dani : { w: 35, h: 94, ws: 2, we: 5, j: 1, g: 0.2 }
-	},
 	/* example scene */
 	main : {
 		x : 0,
