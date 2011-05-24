@@ -19,7 +19,7 @@ RELEASE='Gunner_'`date +%s`
 echo 'copying files...'
 cp -R . /tmp/$RELEASE
 rm  /tmp/$RELEASE/README.md
-rm  /tmp/$RELEASE/website_update.sh
+rm  /tmp/$RELEASE/website_installer.sh
 rm  /tmp/$RELEASE/sv
 
 echo 'compacting index...'

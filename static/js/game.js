@@ -375,6 +375,7 @@ LOADER = {
 				return function(e) {
 					if(e.target.readyState === 4 && !LOADER.sounds[id]) {
 						LOADER.sounds[id] = this;
+						$('main').removeChild(this);
 						LOADER.sounds.loaded ++;
 						$('loading').innerHTML = 'Loading Sounds... ' + LOADER.sounds.loaded + '/' + sounds.length;
 						if(LOADER.sounds.loaded === sounds.length) {
@@ -384,6 +385,7 @@ LOADER = {
 				}
 			}(sound), true);
 			snd.src = snd_path + sound + '.' + (snd.canPlayType("audio/ogg") ? 'ogg' : 'mp3');
+			$('main').appendChild(snd); //if i don't do this, chrome destroys the object before it fires the event
 		}
 	},
 	init : function(){
