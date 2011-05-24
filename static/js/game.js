@@ -60,6 +60,12 @@ function renderScript(src) {
 	d.parentNode.insertBefore(s, d);
 }
 
+function emptyNode(node) {
+	while(node.firstChild) {
+		node.removeChild(node.firstChild);
+	}
+}
+
 function show(e) {
 	e.style.display = 'block';
 }
@@ -399,24 +405,30 @@ LOADER = {
 	},
 	init : function(){
 		CANVAS.init(640, 480, $('main'));
-
-		addEvent('keydown', GAME.keydown, window);
-		addEvent('keyup', GAME.keyup, window);
-		addEvent('click', GAME.click, window);
-		addEvent('mousemove', GAME.mousemove, window);
-		
-		GAME.onResize();
-		addEvent('resize', GAME.onResize, window);
-		hide($('loading'));
-		show($('main'));
-		
-		SOUND.getMuteCookie();
 				
-		//GAME.start(); //for quick debug
 		var h = document.location.hash.substr(2).split('/');
 		if(h[0] === 'editor') {
+			var i = cE('div');
+			i.id = 'inspector';
+			$('main').parentNode.appendChild(i);
 			renderScript('static/js/editor.js?' + (new Date().getTime() / 1000)); //editor
-		} else GAME.renderSplashScreen(); //regular behaviour
+		} else {
+			addEvent('keydown', GAME.keydown, window);
+			addEvent('keyup', GAME.keyup, window);
+			addEvent('click', GAME.click, window);
+			addEvent('mousemove', GAME.mousemove, window);
+			
+			GAME.onResize();
+			addEvent('resize', GAME.onResize, window);
+			
+			SOUND.getMuteCookie();
+			
+			//GAME.start(); //for quick debug
+			GAME.renderSplashScreen(); //regular behaviour
+		}
+		
+		hide($('loading'));
+		show($('main'));
 	}
 };
 

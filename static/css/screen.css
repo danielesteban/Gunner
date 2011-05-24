@@ -44,3 +44,23 @@ body {
 	position: relative;
 	cursor: pointer;
 }
+
+
+/* editor styles */
+#main.edit {
+	float: left;
+	width: 655px;
+	height: 495px;
+	overflow: scroll;
+}
+
+#inspector {
+	float: left;
+	margin: 0 0 0 2em;
+}
+
+#inspector label {
+	float: left;
+	width: 50px;
+	margin: 0 0 0 1em;
+}
