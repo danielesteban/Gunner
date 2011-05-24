@@ -781,7 +781,7 @@ SCENE = {
 			
 			if(player.life > 0) {
 				//enemies AI
-				if(player !== SCENE.mainPlayer) {
+				if(player !== SCENE.mainPlayer && player.x + player.w >= -SCENE.x && player.x < -SCENE.x + 640 && player.y + player.h >= -SCENE.y && player.y < -SCENE.y + 480) {
 					if(Math.round(Math.random() * 20) === 1) player.move = Math.round(Math.random() * 2) - 1;
 					if(Math.round(Math.random() * 40) === 1) {
 						PLAYER.aimTo(player, SCENE.mainPlayer.x, SCENE.mainPlayer.y - 50 + Math.round(Math.random() * (SCENE.mainPlayer.h + 100)));
