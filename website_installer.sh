@@ -67,6 +67,9 @@ echo "$SCREEN_MD5 $SCREEN_VER $GAME_MD5 $GAME_VER" > sv
 sed -i '' -e "s/static\/css\/screen.css\?1/static\/css\/screen.css\?$SCREEN_VER/g" /tmp/$RELEASE/index.html
 sed -i '' -e "s/static\/js\/game.js\?1/static\/js\/game.js\?$GAME_VER/g" /tmp/$RELEASE/index.html
 
+#cp -R /tmp/$RELEASE/* ../GunnerRelease/
+#exit 1
+
 echo "compressing package..."
 tar --exclude=".*" -jcf /tmp/$RELEASE.tbz -C /tmp/ $RELEASE
 
