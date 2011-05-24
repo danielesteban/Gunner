@@ -163,7 +163,7 @@ CANVAS = {
 				destY = destY * CANVAS.scaleY;
 				
 				if(this.rotation !== 0) {
-              		ctx.save();
+					ctx.save();
 					ctx.translate(destX, destY);
 					ctx.rotate(this.rotation * Math.PI / 180);
 					destX = destY = 0;
@@ -548,37 +548,41 @@ GAME = {
 		}
 	},
 	click : function(e) {
-		if(SCENE.mainPlayer) PLAYER.fire(SCENE.mainPlayer);
+		if(SCENE.mainPlayer) {
+			var player = SCENE.mainPlayer,
+				mouse = GAME.getMouseRelPos(e),
+				gM = player.x + (player.w / 2);
+			
+			if(!player.onAir && ((!player.flip && mouse.x < gM) || (player.flip && mouse.x > gM))) {
+				player.flip = !player.flip
+				SCENE.movePlayers();
+			}
+			
+			PLAYER.fire(player);
+		}
 	},
 	mousemove : function(e) {
 		if(SCENE.mainPlayer) {
-			var tX = ((e.clientX - CANVAS.tag.offsetLeft) / CANVAS.scaleX) - SCENE.x,
-				tY = ((e.clientY - CANVAS.tag.offsetTop) / CANVAS.scaleY) - SCENE.y,
-				player = SCENE.mainPlayer,
-				dx, dy, gM = player.x + (player.w / 2),
-				cursorAngle;
-		
-			// get relative target location
-			if(tX < gM) {
-				tX = gM + (gM - tX);
-			}
-			
-			dx = tX - player.gun.x;
-			dy = tY - player.gun.y;
-			// determine angle, convert to degrees
-			cursorAngle = 360 * (Math.atan2(dy,dx) / (2*Math.PI));
-			if(player.flip) cursorAngle = (cursorAngle * -1);
-			if(cursorAngle < -40) cursorAngle = -40;
-			if(cursorAngle > 40) cursorAngle = 40;
-			// point at cursor
-			if(cursorAngle !== player.gun.rotation) player.gun.rotation = cursorAngle;
+			var mouse = GAME.getMouseRelPos(e);
+			PLAYER.aimTo(SCENE.mainPlayer, mouse.x, mouse.y);
 		}
+	},
+	getMouseRelPos : function(e) {
+		var x = ((e.clientX - CANVAS.tag.offsetLeft) / CANVAS.scaleX) - SCENE.x,
+			y = ((e.clientY - CANVAS.tag.offsetTop) / CANVAS.scaleY) - SCENE.y;
+		
+		return { x: x, y: y };
 	}
 };
 
 /* player related funcs */
 
 PLAYER = {
+	/* models definitions */
+	models : {
+		guy : { w: 35, h: 94, ws: 1, we: 1, j: 1, g: 0.4 },
+		dani : { w: 35, h: 94, ws: 2, we: 5, j: 1, g: 0.2 }
+	},
 	add : function(id, x, y, w, h, imgId, walkingStartFrame, walkingEndFrame, onAirFrame, gunOffset, ammo, life) {
 		var player = CANVAS.add(id, x, y, w, h, null, false, LOADER.images[imgId + '1.png']);
 		player.gun = CANVAS.add(id + '_gun', -50, -16, 50, 16, null, false, LOADER.images['gun.png']);
@@ -654,17 +658,36 @@ PLAYER = {
 		}
 		
 		return false;
+	},
+	aimTo : function(player, tX, tY) {
+		var dx, dy, gM = player.x + (player.w / 2),
+			isInFront = ((!player.flip && tX < gM) || (player.flip && tX > gM) ? false : true),
+			cursorAngle;
+	
+		if(player === SCENE.mainPlayer || isInFront) {
+			// get relative target location
+			if(tX < gM) {
+				tX = gM + (gM - tX);
+			}
+		
+			dx = tX - player.gun.x;
+			dy = tY - player.gun.y;
+			// determine angle, convert to degrees
+			cursorAngle = 360 * (Math.atan2(dy,dx) / (2*Math.PI));
+			if(player.flip) cursorAngle = (cursorAngle * -1);
+			if(cursorAngle < -40) cursorAngle = -40;
+			if(cursorAngle > 40) cursorAngle = 40;
+			// point at cursor
+			if(cursorAngle !== player.gun.rotation) player.gun.rotation = cursorAngle;
+		} else {
+			player.gun.rotation = 0;
+		}
 	}
 };
 
 /* scene related funcs */
 
 SCENE = {
-	/* guys definitions */
-	guys : {
-		guy : { w: 35, h: 94, ws: 1, we: 1, j: 1, g: 0.4 },
-		dani : { w: 35, h: 94, ws: 2, we: 5, j: 1, g: 0.2 }
-	},
 	mainPlayer : null,
 	floors : null,
 	players : null,
@@ -695,7 +718,7 @@ SCENE = {
 		scene.enemies.push(scene.mainPlayer);
 		for(i in scene.enemies) {
 			o = scene.enemies[i];
-			g = SCENE.guys[o.g];
+			g = PLAYER.models[o.g];
 			mp = (o === scene.mainPlayer)
 			players.push(PLAYER.add((mp ? 'mainPlayer' : 'enemy' + i), o.x, o.y, g.w, g.h, o.g, g.ws, g.we, g.j, g.g, (mp ? previousAmmo || o.a : -1), (mp ? previousLife || o.l : o.l)));
 		}
@@ -738,7 +761,10 @@ SCENE = {
 				//enemies AI
 				if(player !== SCENE.mainPlayer) {
 					if(Math.round(Math.random() * 20) === 1) player.move = Math.round(Math.random() * 2) - 1;
-					if(Math.round(Math.random() * 40) === 1) PLAYER.fire(player);
+					if(Math.round(Math.random() * 40) === 1) {
+						PLAYER.aimTo(player, SCENE.mainPlayer.x, SCENE.mainPlayer.y - 50 + Math.round(Math.random() * (SCENE.mainPlayer.h + 100)));
+						PLAYER.fire(player);
+					}
 				}
 		
 				if(player.move) {

@@ -67,7 +67,10 @@ echo "$SCREEN_MD5 $SCREEN_VER $GAME_MD5 $GAME_VER" > sv
 sed -i '' -e "s/static\/css\/screen.css\?1/static\/css\/screen.css\?$SCREEN_VER/g" /tmp/$RELEASE/index.html
 sed -i '' -e "s/static\/js\/game.js\?1/static\/js\/game.js\?$GAME_VER/g" /tmp/$RELEASE/index.html
 
+#for local install to gh_pages
+#rm -rf ../GunnerRelease/*
 #cp -R /tmp/$RELEASE/* ../GunnerRelease/
+#rm -rf /tmp/$RELEASE
 #exit 1
 
 echo "compressing package..."
