@@ -51,6 +51,15 @@ function cancelHandler(e) {
 	return false;
 }
 
+function renderScript(src) {
+	var s = cE('script'),
+		d = document.getElementsByTagName('script')[0];
+	s.type = 'text/javascript';
+	s.async = true;
+	s.src = src;
+	d.parentNode.insertBefore(s, d);
+}
+
 function show(e) {
 	e.style.display = 'block';
 }
@@ -405,8 +414,9 @@ LOADER = {
 				
 		//GAME.start(); //for quick debug
 		var h = document.location.hash.substr(2).split('/');
-		if(h[0] === 'editor') EDITOR.render(h[1]); //editor
-		else GAME.renderSplashScreen(); //regular behaviour
+		if(h[0] === 'editor') {
+			renderScript('static/js/editor.js?' + (new Date().getTime() / 1000)); //editor
+		} else GAME.renderSplashScreen(); //regular behaviour
 	}
 };
 
@@ -707,7 +717,7 @@ SCENE = {
 		SCENE.w = scene.w;
 		SCENE.h = scene.h;
 		
-		if(scene.background) CANVAS.add('background', 0, 0, scene.w, scene.h, LOADER.images[scene.background + '.jpg']);
+		CANVAS.add('background', 0, 0, scene.w, scene.h, (scene.background ? LOADER.images[scene.background + '.jpg'] : '0'));
 		for(i in scene.floors) {
 			o = scene.floors[i];
 			floors.push(CANVAS.add('floor' + i, o.x, o.y, o.w, o.h, LOADER.images[o.t + '.jpg']));
@@ -934,30 +944,6 @@ SCENE = {
 				}
 			}
 		}
-	}
-};
-
-/* levels editor */
-
-EDITOR = {
-	render : function(scene_id) {
-		var scene = SCENES[scene_id];
-		if(!scene) {
-			scene_id = new Date().getTime();
-			scene = {
-				x : 0,
-				y : 0,
-				w : 640,
-				h : 480,
-				enemies : [],
-				mainPlayer : { g: 'dani', x: 0, y: 0, a: 200, l: 100 }
-			};
-			SCENES[scene_id] = scene;
-		}
-		
-		SCENE.load(scene, true);
-		
-		CANVAS.clear().draw();
 	}
 };
 

@@ -30,6 +30,7 @@ echo 'obfuscating css...'
 java -jar $YUIC /tmp/$RELEASE/static/css/screen.css -o /tmp/$RELEASE/static/css/screen.css
 echo 'obfuscating js...'
 java -jar $YUIC /tmp/$RELEASE/static/js/game.js -o /tmp/$RELEASE/static/js/game.js
+java -jar $YUIC /tmp/$RELEASE/static/js/editor.js -o /tmp/$RELEASE/static/js/editor.js
 
 echo 'setting static versions...'
 if [ -f sv ]
